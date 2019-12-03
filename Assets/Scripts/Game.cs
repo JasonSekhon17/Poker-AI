@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI;
+using TMPro;
 
 public class Game : MonoBehaviour
 {
@@ -39,6 +41,12 @@ public class Game : MonoBehaviour
     public StandardPokerHandEvaluator.PokerHandRankingTable rankingTable;
 
     public List<StandardPokerHandEvaluator.Hand> handsEval;
+
+    public TextMeshProUGUI logUI;
+
+    public Scrollbar scrollbar;
+
+    public int logLines;
     
     // Start is called before the first frame update
     void Start()
@@ -65,11 +73,13 @@ public class Game : MonoBehaviour
         else
             players[currentPlayerIndex - 1].smallBlind = true;
         humanPlayer = players[0];
+        logLines = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        scrollbar.value = 0;
         if (currentPlayer.state == Player.States.Active )
             waiting = true;
 
@@ -92,7 +102,11 @@ public class Game : MonoBehaviour
     }
 
     void RoundStart() {
-        Debug.Log("Round start");
+        logUI.text = "";
+        logUI.rectTransform.sizeDelta = new Vector2(275, 200);
+        logUI.rectTransform.anchoredPosition = new Vector3(-10, 0, 0);
+        logUI.text += "Round start" + "\n";
+        logLines = 1;
         foreach(Player player in players) {
             player.hand.DrawCards();
             if (player.playerIsAI)
@@ -106,27 +120,39 @@ public class Game : MonoBehaviour
     }
 
     void Preflop() {
-        Debug.Log("Preflop for player " + (currentPlayerIndex + 1));
+        logUI.text += "Preflop for player " + (currentPlayerIndex + 1) + "\n";
+        logLines++;
+        if (logLines > 11)
+            logUI.rectTransform.sizeDelta = new Vector2(logUI.rectTransform.sizeDelta.x, logUI.rectTransform.sizeDelta.y + 23);
         currentPlayer.state = Player.States.Active;
     }
 
     void Flop() {
-        Debug.Log("Flop for player " + (currentPlayerIndex + 1));
+        logUI.text += "Flop for player " + (currentPlayerIndex + 1) + "\n";
+        logLines++;
+        if (logLines > 11)
+            logUI.rectTransform.sizeDelta = new Vector2(logUI.rectTransform.sizeDelta.x, logUI.rectTransform.sizeDelta.y + 23);
         currentPlayer.state = Player.States.Active;
     }
 
     void River() {
-        Debug.Log("River for player " + (currentPlayerIndex + 1));
+        logUI.text += "River for player " + (currentPlayerIndex + 1) + "\n";
+        logLines++;
+        if (logLines > 11)
+            logUI.rectTransform.sizeDelta = new Vector2(logUI.rectTransform.sizeDelta.x, logUI.rectTransform.sizeDelta.y + 23);
         currentPlayer.state = Player.States.Active;
     }
 
     void Turn() {
-        Debug.Log("Turn for player " + (currentPlayerIndex + 1));
+        logUI.text += "Turn for player " + (currentPlayerIndex + 1) + "\n";
+        logLines++;
+        if (logLines > 11)
+            logUI.rectTransform.sizeDelta = new Vector2(logUI.rectTransform.sizeDelta.x, logUI.rectTransform.sizeDelta.y + 23);
         currentPlayer.state = Player.States.Active;
     }
 
     void RoundEnd() {
-        Debug.Log("Round end");
+        logUI.text += "Round end" + "\n";
         FindWinners();
         waiting = true;
         int rank = (int)((1 - (humanPlayer.GetFinalHandRank() / 7462.0)) * 100);
@@ -305,7 +331,10 @@ public class Game : MonoBehaviour
             }
         }
         players[winner].state = Player.States.Won;
-        Debug.Log("Winner is player " + winner + " with " + bestHands[0].ToString());
+        logUI.text += "Winner is player " + (winner + 1) + " with " + bestHands[0].ToString() + "\n";
+        logLines++;
+        if (logLines > 11)
+            logUI.rectTransform.sizeDelta = new Vector2(logUI.rectTransform.sizeDelta.x, logUI.rectTransform.sizeDelta.y + 23);
     }
 
     public StandardPokerHandEvaluator.Card BuildCardForEval(Card card) {

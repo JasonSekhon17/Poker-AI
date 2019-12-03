@@ -102,7 +102,10 @@ public class Player : MonoBehaviour
     }
 
     public void Call() {
-        Debug.Log("Call");
+        game.logUI.text += "Player " + (game.currentPlayerIndex + 1) + " Calls\n";
+        game.logLines++;
+        if (game.logLines > 11)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
         chips.AddToPot(chips.currentBetAmount);
         chips.AddChipsToPlayer(-chips.currentBetAmount);
         chips.currentBetAmount = 0;
@@ -110,12 +113,18 @@ public class Player : MonoBehaviour
     }
 
     public void Fold() {
-        Debug.Log("Fold");
+        game.logUI.text += "Player " + (game.currentPlayerIndex + 1) + " Folds\n";
+        game.logLines++;
+        if (game.logLines > 11)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
         CompleteTurn(States.Eliminated);
     }
 
     public void Bet(int amount) {
-        Debug.Log("Bet " + amount);
+        game.logUI.text += "Player " + (game.currentPlayerIndex + 1) + " Bets " + amount + "\n";
+        game.logLines++;
+        if (game.logLines > 11)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
         chips.AddToPot(chips.currentBetAmount + amount);
         chips.AddChipsToPlayer(-(amount + chips.currentBetAmount));
         foreach(Player player in game.players) {
