@@ -47,6 +47,8 @@ public class Game : MonoBehaviour
     public Scrollbar scrollbar;
 
     public int logLines;
+
+    public int maxLines;
     
     // Start is called before the first frame update
     void Start()
@@ -103,7 +105,7 @@ public class Game : MonoBehaviour
 
     void RoundStart() {
         logUI.text = "";
-        logUI.rectTransform.sizeDelta = new Vector2(275, 200);
+        logUI.rectTransform.sizeDelta = new Vector2(275, 650);
         logUI.rectTransform.anchoredPosition = new Vector3(-10, 0, 0);
         logUI.text += "Round start" + "\n";
         logLines = 1;
@@ -122,7 +124,7 @@ public class Game : MonoBehaviour
     void Preflop() {
         logUI.text += "Preflop for player " + (currentPlayerIndex + 1) + "\n";
         logLines++;
-        if (logLines > 11)
+        if (logLines > maxLines)
             logUI.rectTransform.sizeDelta = new Vector2(logUI.rectTransform.sizeDelta.x, logUI.rectTransform.sizeDelta.y + 23);
         currentPlayer.state = Player.States.Active;
     }
@@ -130,7 +132,7 @@ public class Game : MonoBehaviour
     void Flop() {
         logUI.text += "Flop for player " + (currentPlayerIndex + 1) + "\n";
         logLines++;
-        if (logLines > 11)
+        if (logLines > maxLines)
             logUI.rectTransform.sizeDelta = new Vector2(logUI.rectTransform.sizeDelta.x, logUI.rectTransform.sizeDelta.y + 23);
         currentPlayer.state = Player.States.Active;
     }
@@ -138,7 +140,7 @@ public class Game : MonoBehaviour
     void River() {
         logUI.text += "River for player " + (currentPlayerIndex + 1) + "\n";
         logLines++;
-        if (logLines > 11)
+        if (logLines > maxLines)
             logUI.rectTransform.sizeDelta = new Vector2(logUI.rectTransform.sizeDelta.x, logUI.rectTransform.sizeDelta.y + 23);
         currentPlayer.state = Player.States.Active;
     }
@@ -146,7 +148,7 @@ public class Game : MonoBehaviour
     void Turn() {
         logUI.text += "Turn for player " + (currentPlayerIndex + 1) + "\n";
         logLines++;
-        if (logLines > 11)
+        if (logLines > maxLines)
             logUI.rectTransform.sizeDelta = new Vector2(logUI.rectTransform.sizeDelta.x, logUI.rectTransform.sizeDelta.y + 23);
         currentPlayer.state = Player.States.Active;
     }
@@ -226,14 +228,17 @@ public class Game : MonoBehaviour
                     if(players.IndexOf(player) == 0) {
                         players.Last().smallBlind = false;
                         players[1].bigBlind = true;
+                        currentPlayerIndex = 1;
                         break;
                     } else if (players.Last() == player) {
                         players[players.Count-2].smallBlind = false;
                         players[0].bigBlind = true;
+                        currentPlayerIndex = 0;
                         break;
                     } else {
                         players[players.IndexOf(player)-1].smallBlind = false;
                         players[players.IndexOf(player)+1].bigBlind = true;
+                        currentPlayerIndex = players.IndexOf(player) + 1;
                         break;
                     }
                 }
@@ -333,7 +338,7 @@ public class Game : MonoBehaviour
         players[winner].state = Player.States.Won;
         logUI.text += "Winner is player " + (winner + 1) + " with " + bestHands[0].ToString() + "\n";
         logLines++;
-        if (logLines > 11)
+        if (logLines > maxLines)
             logUI.rectTransform.sizeDelta = new Vector2(logUI.rectTransform.sizeDelta.x, logUI.rectTransform.sizeDelta.y + 23);
     }
 

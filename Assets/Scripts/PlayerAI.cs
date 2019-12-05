@@ -92,7 +92,12 @@ public class PlayerAI : MonoBehaviour
 
     public void decisionTreePreflop() {
         int str = GetPreflopStrength(player.hand.c1, player.hand.c2);
-        Debug.Log("Preflop Rank " + str);
+
+        game.logUI.text += "Preflop Rank " + str + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+        
         PlayerDecisionProfile pdp = new PlayerDecisionProfile{
             strength = str,
             bigblind = player.bigBlind,
@@ -106,57 +111,116 @@ public class PlayerAI : MonoBehaviour
 
     public void Flop() {
         handRank = (int)((1 - (GetFlopHandRank() / 7462.0)) * 100);
-        Debug.Log("Flop Rank " + handRank);
+
+        game.logUI.text += "Flop Rank " + handRank + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+
         string move = PredictNextMove(player.record.movesMade);
-        Debug.Log(move);
+
+        game.logUI.text += "Predicted Move: " + move + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+        
         if (move.Equals("C"))
-            handRank += (int)(handRank * .05);
-        if (move.Equals("F"))
             handRank += (int)(handRank * .1);
+        if (move.Equals("F"))
+            handRank += (int)(handRank * .2);
         if (move.Equals("B"))
             handRank -= (int)(handRank * .05);
-        Debug.Log("Flop Rank " + handRank);
+        
+        game.logUI.text += "Adjusted Rank: " + handRank + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+        
         BuildBehaviourTree(handRank);
     }
 
     public void River() {
         handRank = (int)((1 - (GetRiverHandRank() / 7462.0)) * 100);
-        Debug.Log("River Rank " + handRank);
+
+        game.logUI.text += "River Rank " + handRank + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+
         string move = PredictNextMove(player.record.movesMade);
-        Debug.Log(move);
+
+        game.logUI.text += "Predicted Move: " + move + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+
         if (move.Equals("C"))
-            handRank += (int)(handRank * .05);
-        if (move.Equals("F"))
             handRank += (int)(handRank * .1);
+        if (move.Equals("F"))
+            handRank += (int)(handRank * .2);
         if (move.Equals("B"))
             handRank -= (int)(handRank * .05);
-        Debug.Log("Flop Rank " + handRank);
+        
+        game.logUI.text += "Adjusted Rank: " + handRank + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+        
         BuildBehaviourTree(handRank);
     }
 
     public void Turn() {
         handRank = (int)((1 - (GetTurnHandRank() / 7462.0)) * 100);
-        Debug.Log("Turn Rank " + handRank);
+
+        game.logUI.text += "Turn Rank " + handRank + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+
         string move = PredictNextMove(player.record.movesMade);
-        Debug.Log(move);
+
+        game.logUI.text += "Predicted Move: " + move + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+        
         if (move.Equals("C"))
-            handRank += (int)(handRank * .05);
-        if (move.Equals("F"))
             handRank += (int)(handRank * .1);
+        if (move.Equals("F"))
+            handRank += (int)(handRank * .2);
         if (move.Equals("B"))
             handRank -= (int)(handRank * .05);
-        Debug.Log(PredictHandStrength(player.record.movesMade));
-        string[] range = PredictHandStrength(player.record.movesMade).Split(',');
+        
+        game.logUI.text += "Adjusted Rank: " + handRank + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+        
+        string movesMade = PredictHandStrength(player.record.movesMade);
+
+        game.logUI.text += "Predicted Hand Strength: " + movesMade + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+
+        string[] range = movesMade.Split(',');
         int max = 0;
         int min = 0;
         if (range.Count() > 1) {
-            min = int.Parse(PredictHandStrength(player.record.movesMade).Split(',')[0]);
-            max = int.Parse(PredictHandStrength(player.record.movesMade).Split(',')[1]);
+            min = int.Parse(range[0]);
+            max = int.Parse(range[1]);
         }
         if (handRank > max)
-            handRank += (int)(handRank * .05);
+            handRank += (int)(handRank * .1);
         else if (handRank < min)
-            handRank -= (int)(handRank * .05);
+            handRank -= (int)(handRank * .1);
+        
+        game.logUI.text += "Adjusted Rank: " + handRank + "\n";
+        game.logLines++;
+        if (game.logLines > game.maxLines)
+            game.logUI.rectTransform.sizeDelta = new Vector2(game.logUI.rectTransform.sizeDelta.x, game.logUI.rectTransform.sizeDelta.y + 23);
+        
+
         BuildBehaviourTree(handRank);
     }
 
@@ -241,6 +305,7 @@ public class PlayerAI : MonoBehaviour
         betAmount = (int)(player.chips.currentChips * (handRank / 100.0));
         maxBet = player.chips.currentChips / 8;
         minBet = player.chips.currentChips / 4;
+
         List<Node> rootChildren = new List<Node>();
 
         m_node3AA = new ActionNode(CheckIfHandStrengthIsGreater50);
@@ -259,8 +324,8 @@ public class PlayerAI : MonoBehaviour
         m_node5BBAA = new ActionNode(CheckifHighBetWasMade);
         m_node5BBAB = new ActionNode(Fold);
         m_node5BBBA = new ActionNode(CheckifLowBetWasMade);
-        m_node5BBBB = new ActionNode(CheckIfHandStrengthIsGreater40);
-        m_node5BBBC = new ActionNode(Call);
+        m_node5BBBB = new ActionNode(CheckIfHandStrengthIsLess40);
+        m_node5BBBC = new ActionNode(Fold);
 
         //Build Node 2A
         rootChildren.Add(m_node7ABABAA);
@@ -324,7 +389,6 @@ public class PlayerAI : MonoBehaviour
         rootChildren.Clear();
 
         //Build Root Node
-        rootChildren.Clear();
         rootChildren.Add(m_node2A);
         rootChildren.Add(m_node2B);
         m_rootNode = new Selector(new List<Node>(rootChildren));
@@ -333,8 +397,8 @@ public class PlayerAI : MonoBehaviour
         m_rootNode.Evaluate();
     }
 
-    NodeStates CheckIfHandStrengthIsGreater40() {
-        if (handRank >= 40)
+    NodeStates CheckIfHandStrengthIsLess40() {
+        if (handRank < 40)
             return NodeStates.SUCCESS;
         else
             return NodeStates.FAILURE;
@@ -361,7 +425,7 @@ public class PlayerAI : MonoBehaviour
     }
 
     NodeStates CheckifLowBetWasMade() {
-        if (player.chips.currentBetAmount <= maxBet)
+        if (player.chips.currentBetAmount <= maxBet && player.chips.currentBetAmount != 0)
             return NodeStates.SUCCESS;
         else
             return NodeStates.FAILURE;
@@ -402,6 +466,7 @@ public class PlayerAI : MonoBehaviour
         int fCount = 0;
         int bCount = 0;
         string seq;
+        
         for (int i = 0; i < playerMoveRecords.Count; i++){
             seq = playerMoveRecords[i].movesMade;
             
@@ -495,8 +560,9 @@ public class PlayerAI : MonoBehaviour
         double num7080  = 0;
         double num8090  = 0;
         double num90100 = 0;
+
         foreach (DataRow row in rows) {
-            if (row["Moves"].ToString() == pattern && row["Strength"].ToString() == "0,10")
+            if (row["Moves"].ToString() == pattern)
                 if (row["Strength"].ToString() == "0,10")
                     num010++;
                 if (row["Strength"].ToString() == "10,20")
@@ -550,6 +616,7 @@ public class PlayerAI : MonoBehaviour
         num7080  = 0;
         num8090  = 0;
         num90100 = 0;
+
         foreach (DataRow row in rows) {
             if (((bool)row["Won"]) == game.CheckIfPlayerWon())
                 if (row["Strength"].ToString() == "0,10")
@@ -674,7 +741,8 @@ public class PlayerAI : MonoBehaviour
         } else if (p8090 > p90100)
         {
             return "80,90";
-        } else if (p90100 > 0) {
+        } else if (p90100 > 0)
+        {
             return "90,100";
         } else
             return "";

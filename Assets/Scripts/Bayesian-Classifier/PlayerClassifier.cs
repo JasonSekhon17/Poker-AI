@@ -21,16 +21,6 @@ public class PlayerClassifier
         river = "";
     }
 
-    public PlayerClassifier(bool won, int str, string preflop, string flop, string river, string turn) {
-        handStrength = calculateHandStrength(str);
-        this.won = won;
-        this.preflop = preflop;
-        this.flop = flop;
-        this.river = river;
-        this.turn = turn;
-        this.moves = preflop + flop + river + turn;
-    }
-
     public string calculateHandStrength(int str) {
         if (str >= 0 && str < 10) {
             return "0,10";
